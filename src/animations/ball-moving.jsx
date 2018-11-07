@@ -1,6 +1,8 @@
 import React from 'react';
 import { createSvgElement } from '../lib/svg-helper';
 import { animate } from '../lib/animate-helper';
+import { noop } from '../lib/fn-helper';
+import './ball-moving.css';
 
 const HEIGHT = 10;
 const WIDTH = 700;
@@ -26,6 +28,7 @@ function animateConstantSpeed(circle, speed) {
     increment: speed,
     maxLimit: WIDTH,
     callback: x => circle.setAttribute('cx', x),
+    repeat: false,
   });
 }
 
@@ -33,20 +36,23 @@ export class BallWithConstantSpeed extends React.Component {
   constructor(props) {
     super(props);
     this.svgRef = React.createRef();
-    this.stopAnimate = function noop() {
-      /*noop*/
-    };
+    this.stopAnimate = noop;
   }
 
   render() {
     return (
-      <svg
-        className="animation-svg"
-        ref={this.svgRef}
-        width={WIDTH}
-        height={HEIGHT}
-        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-      />
+      <div className="ball-animation-container">
+        <span>{this.props.label}</span>
+        <div className="animation-svg-container">
+          <svg
+            className="animation-svg"
+            ref={this.svgRef}
+            width={WIDTH}
+            height={HEIGHT}
+            viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+          />
+        </div>
+      </div>
     );
   }
 
@@ -76,7 +82,6 @@ export class BallWithConstantSpeed extends React.Component {
 
   static defaultProps = {
     speed: 5,
-    ballColor: 'teal',
     isPlaying: true,
   };
 }
@@ -93,6 +98,7 @@ function animateIncreasingSpeed(circle, initialSpeed, acceleration = 0.05) {
       return x + speed;
     },
     maxLimit: WIDTH,
+    repeat: false,
     callback: x => circle.setAttribute('cx', x),
     onReset: () => (speed = initialSpeed),
   });
@@ -102,20 +108,23 @@ export class BallWithIncreasingSpeed extends React.Component {
   constructor(props) {
     super(props);
     this.svgRef = React.createRef();
-    this.stopAnimate = function noop() {
-      /*noop*/
-    };
+    this.stopAnimate = noop;
   }
 
   render() {
     return (
-      <svg
-        className="animation-svg"
-        ref={this.svgRef}
-        width={WIDTH}
-        height={HEIGHT}
-        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-      />
+      <div className="ball-animation-container">
+        <span>{this.props.label}</span>
+        <div className="animation-svg-container">
+          <svg
+            className="animation-svg"
+            ref={this.svgRef}
+            width={WIDTH}
+            height={HEIGHT}
+            viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+          />
+        </div>
+      </div>
     );
   }
 
@@ -156,34 +165,24 @@ export class BallWithIncreasingSpeed extends React.Component {
 export class ThreeBallsAnimation extends React.Component {
   state = {
     key: Date.now(),
-    isPlaying: true,
   };
 
   resetKey = () => this.setState({ key: Date.now() });
-  togglePlay = () =>
-    this.setState(prevState => ({ isPlaying: !prevState.isPlaying }));
 
   render() {
-    const { isPlaying, key } = this.state;
+    const { key } = this.state;
 
     return (
       <div className="animation-container" {...this.props}>
         <BallWithConstantSpeed
-          speed={2}
+          label="A"
+          speed={3}
           ballColor="grey"
           key={`1${key}`}
-          isPlaying={isPlaying}
         />
-        <BallWithConstantSpeed isPlaying={isPlaying} key={`2${key}`} />
-        <BallWithIncreasingSpeed
-          isPlaying={isPlaying}
-          initialSpeed={3}
-          key={`3${key}`}
-        />
+        <BallWithConstantSpeed label="B" key={`2${key}`} />
+        <BallWithIncreasingSpeed label="C" initialSpeed={2} key={`3${key}`} />
         <button onClick={this.resetKey}>Restart</button>
-        <button onClick={this.togglePlay}>
-          {isPlaying ? 'Pause' : 'Play'}
-        </button>
       </div>
     );
   }

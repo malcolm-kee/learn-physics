@@ -1,4 +1,11 @@
 /**
+ * Used for default params/props
+ */
+export const noop = () => {
+  /* noop */
+};
+
+/**
  * Throttle the function so that it only call maximum once within the limit
  * @param {function} func
  * @param {number} limit

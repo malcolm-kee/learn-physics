@@ -636,3 +636,7 @@ pre tt:after {
 .animation-svg {
   width: 100%;
 }
+
+.animation-svg-container {
+  flex: 1;
+}

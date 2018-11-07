@@ -25,6 +25,7 @@ export const getMultiplierAndInterval = (changePerSecond, multiplier = 1) => {
  * @param {(value: number) => void} options.callback the callback to be invoked with the prop value each frame
  * @param {maxLimit} options.maxLimit the number when the prop should reset to initialValue. If no value provided, the value will never be reset
  * @param {() => void} options.onReset callback invoked when the animation is reset hitting maxLimit
+ * @param {boolean} options.repeat state if the animation should repeat when hit maximum, default to true
  * @returns {() => void}  function to stop the animation
  */
 export const animate = ({
@@ -33,6 +34,7 @@ export const animate = ({
   resetValue = initialValue,
   callback,
   maxLimit,
+  repeat = true,
   onReset = () => {},
 } = {}) => {
   let rafId;
@@ -43,6 +45,7 @@ export const animate = ({
     if (!maxLimit || value < maxLimit) {
       value = diff(value);
     } else {
+      if (!repeat) return;
       value = resetValue;
       onReset();
     }
