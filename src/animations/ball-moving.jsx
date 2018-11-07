@@ -3,13 +3,19 @@ import { createSvgElement } from '../lib/svg-helper';
 import { animate } from '../lib/animate-helper';
 
 // simple hack to only get window width during app load. Ignore window resize
-var winWidth =
-  window.innerWidth ||
-  document.documentElement.clientWidth ||
-  document.body.clientWidth;
+let winWidth;
+
+try {
+  winWidth =
+    window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth;
+} catch (e) {
+  winWidth = 500;
+}
 
 const HEIGHT = 10;
-const WIDTH = winWidth < 500 ? 400 : 800;
+const WIDTH = winWidth <= 600 ? 400 : 800;
 
 function createBall(svg, ballColor = 'teal') {
   const circle = createSvgElement('circle', {
